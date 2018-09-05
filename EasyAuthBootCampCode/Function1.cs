@@ -26,6 +26,7 @@ namespace EasyAuthBootCampCode
             string clientSecret= "";
             string clientId = "";
             string resourceId = "";
+            string accessToken = "";
 
 
             if (ConfigurationManager.AppSettings["clientSecret"] != null && ConfigurationManager.AppSettings["clientId"] != null && ConfigurationManager.AppSettings["resourceId"] != null)
@@ -49,6 +50,8 @@ namespace EasyAuthBootCampCode
            
                 //Resource you are getting an access token to, if you don’t specify this the call will fail due to an incorrect scope
                 authenticationResult = await authenticationContext.AcquireTokenAsync("https://" + resourceId, clientCredential);
+                accessToken = authenticationResult.AccessToken;
+                log.Info("Bearer Token = " + accessToken);
                 //End of getting the access token
             }
             catch (Exception e)
@@ -56,8 +59,7 @@ namespace EasyAuthBootCampCode
                 log.Info(e.ToString());
                 return req.CreateErrorResponse(HttpStatusCode.BadRequest, e.ToString());
             }
-            string accessToken = authenticationResult.AccessToken;
-            log.Info("Bearer Token = " + accessToken);
+            
 
             //Try to connect to management endpoint
             try
