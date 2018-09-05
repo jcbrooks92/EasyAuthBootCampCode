@@ -20,7 +20,7 @@ namespace EasyAuthBootCampCode
         {
             log.Info("C# HTTP trigger function processed a request.");
 
-
+            AuthenticationResult authenticationResult;
             string authority = "https://login.microsoftonline.com/microsoft.onmicrosoft.com/";
             var authenticationContext = new AuthenticationContext(authority);
             string clientSecret= "";
@@ -44,13 +44,19 @@ namespace EasyAuthBootCampCode
 
             }
             var clientCredential = new ClientCredential(clientId, clientSecret);
-
-           //Resource you are getting an access token to, if you don’t specify this the call will fail due to an incorrect scope
-            AuthenticationResult authenticationResult = await authenticationContext.AcquireTokenAsync("https://" + resourceId, clientCredential);
-
+            try
+            {
+                //Resource you are getting an access token to, if you don’t specify this the call will fail due to an incorrect scope
+                authenticationResult = await authenticationContext.AcquireTokenAsync("https://" + resourceId, clientCredential);
+                //End of getting the access token
+            }
+            catch (Exception e)
+            {
+                log.Info(e.ToString());
+                return req.CreateErrorResponse(HttpStatusCode.BadRequest, e.ToString());
+            }
             string accessToken = authenticationResult.AccessToken;
             log.Info("Bearer Token = " + accessToken);
-            //End of getting the access token
 
             //Try to connect to management endpoint
             try
