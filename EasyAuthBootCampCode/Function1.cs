@@ -43,9 +43,10 @@ namespace EasyAuthBootCampCode
                 resourceId = "";
 
             }
-            var clientCredential = new ClientCredential(clientId, clientSecret);
             try
             {
+                var clientCredential = new ClientCredential(clientId, clientSecret);
+           
                 //Resource you are getting an access token to, if you don’t specify this the call will fail due to an incorrect scope
                 authenticationResult = await authenticationContext.AcquireTokenAsync("https://" + resourceId, clientCredential);
                 //End of getting the access token
